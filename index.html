@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>My Drive - Google Drive</title>
+<link rel="icon" href="https://ssl.gstatic.com/docs/doclist/images/drive_2022q3_32dp.png" />
+<style>
+  html, body {
+    margin: 0; padding: 0; height: 100%;
+    font-family: Arial, sans-serif;
+    background: #fff;
+    color: #5f6368;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  #loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  #loading img {
+    width: 48px;
+    margin-bottom: 20px;
+  }
+  #loading span {
+    font-size: 18px;
+    font-weight: 500;
+  }
+  iframe {
+    border: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: none;
+  }
+</style>
+</head>
+<body>
+  <div id="loading">
+    <img src="https://ssl.gstatic.com/docs/doclist/images/drive_2022q3_48dp.png" alt="Drive Logo" />
+    <span>Loading Drive preview...</span>
+  </div>
+  <iframe id="proxyIframe" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
+
+<script>
+  (function() {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const encodedUrl = params.get('q');
+      if (!encodedUrl) throw new Error('Missing target URL');
+
+      // Decode base64 URL
+      const targetUrl = atob(encodedUrl);
+
+      // Simple validation
+      if (!/^https?:\/\//.test(targetUrl)) throw new Error('Invalid URL');
+
+      const iframe = document.getElementById('proxyIframe');
+      iframe.src = "https://yourproxybackend.example.com/bare/" + encodeURIComponent(targetUrl);
+
+      // Show iframe & hide loading once iframe loads
+      iframe.onload = () => {
+        document.getElementById('loading').style.display = 'none';
+        iframe.style.display = 'block';
+        document.title = "My Drive - Google Drive";
+      };
+    } catch (e) {
+      document.getElementById('loading').innerHTML = '<h2>Error loading proxy</h2><p>' + e.message + '</p>';
+    }
+  })();
+</script>
+</body>
+</html>
