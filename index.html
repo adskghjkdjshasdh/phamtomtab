@@ -67,7 +67,7 @@
       const iframe = document.getElementById('proxyIframe');
 
       // Set iframe src to your proxy backend + encoded target URL
-      iframe.src = "https://yourproxybackend.example.com/bare/" + encodeURIComponent(targetUrl);
+      iframe.src = "/api/proxy?url=" + encodeURIComponent(targetUrl);
 
       iframe.onload = () => {
         document.getElementById('loading').style.display = 'none';
